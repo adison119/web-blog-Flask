@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>ปรับแต่ง Layout</h1>
+<form method="post" class="form" id="layoutForm">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+  <label>ชื่อเว็บไซต์</label>
+  <input type="text" name="site_title" value="{{ settings.site_title }}" required>
+  <label>แท็กไลน์</label>
+  <input type="text" name="site_tagline" value="{{ settings.site_tagline }}">
+  <label>ตำแหน่ง Sidebar</label>
+  <select name="layout" id="layoutSelect">
+    <option value="left" {{ 'selected' if settings.layout=='left' else '' }}>ซ้าย</option>
+    <option value="right" {{ 'selected' if settings.layout=='right' else '' }}>ขวา</option>
+  </select>
+  <label>สีหลัก</label>
+  <input type="color" name="primary_color" id="primaryColor" value="{{ settings.primary_color }}">
+  <button class="btn" type="submit">บันทึก</button>
+</form>
+<div class="preview">
+  <h3>ตัวอย่าง</h3>
+  <div class="preview-box">
+    <div class="sidebar"></div>
+    <div class="content"></div>
+  </div>
+</div>
+{% endblock %}

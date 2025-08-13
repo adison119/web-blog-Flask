@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block content %}
+<article class="post">
+  <h1>{{ post.title }}</h1>
+  <div class="meta">โดย {{ post.author.username }} • {{ post.created_at.strftime('%Y-%m-%d %H:%M') if post.created_at else '' }}</div>
+  {% if post.image_filename %}<img class="post-hero" src="{{ url_for('static', filename='uploads/' ~ post.image_filename) }}" alt="">{% endif %}
+  <div class="content">{{ post.content | md }}</div>
+  {% if current_user.is_authenticated and post.author_id == current_user.id %}
+  <p><a href="{{ url_for('main.post_edit', post_id=post.id) }}" class="btn">แก้ไขโพสต์</a></p>
+  {% endif %}
+</article>
+{% endblock %}

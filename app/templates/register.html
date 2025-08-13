@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>สมัครสมาชิก</h1>
+<form method="post" class="form">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+  <label>ชื่อผู้ใช้</label>
+  <input type="text" name="username" required>
+  <label>อีเมล</label>
+  <input type="email" name="email" required>
+  <label>รหัสผ่าน</label>
+  <input type="password" name="password" required>
+  <label>ยืนยันรหัสผ่าน</label>
+  <input type="password" name="confirm" required>
+  <button type="submit" class="btn">สมัครสมาชิก</button>
+</form>
+<p>มีบัญชีแล้ว? <a href="{{ url_for('auth.login') }}">เข้าสู่ระบบ</a></p>
+{% endblock %}

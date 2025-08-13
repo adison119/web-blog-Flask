@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ (settings.site_title if settings else 'My Blog') }} - {{ (settings.site_tagline if settings else '') }}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+  <script defer src="{{ url_for('static', filename='js/app.js') }}"></script>
+  <style>:root { --primary: {{ settings.primary_color if settings else '#3b82f6' }}; }</style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container">
+      <a href="{{ url_for('main.index') }}" class="logo">{{ settings.site_title if settings else 'My Blog' }}</a>
+      <p class="tagline">{{ settings.site_tagline if settings else '' }}</p>
+      <nav>
+        <a href="{{ url_for('main.index') }}">หน้าแรก</a>
+        {% if current_user.is_authenticated %}
+          <a href="{{ url_for('main.post_new') }}">เขียนโพสต์</a>
+          <a href="{{ url_for('admin.layout_settings') }}">ปรับ Layout</a>
+          <a href="{{ url_for('auth.logout') }}">ออกจากระบบ</a>
+        {% else %}
+          <a href="{{ url_for('auth.login') }}">เข้าสู่ระบบ</a>
+          <a href="{{ url_for('auth.register') }}">สมัครสมาชิก</a>
+        {% endif %}
+      </nav>
+    </div>
+  </header>
+
+  <main class="container layout-{{ settings.layout if settings else 'right' }}">
+    <aside class="sidebar">
+      <form class="search" method="get" action="{{ url_for('main.index') }}">
+        <input type="text" name="q" placeholder="ค้นหาโพสต์..." value="{{ q|default('') }}">
+        <button type="submit">ค้นหา</button>
+      </form>
+      <div class="widget">
+        <h3>เกี่ยวกับ</h3>
+        <p>ตัวอย่างบล็อกด้วย Flask + SQLAlchemy</p>
+      </div>
+    </aside>
+    <section class="content">
+      {% with msgs = get_flashed_messages(with_categories=True) %}
+        {% if msgs %}
+          <div class="flashes">
+            {% for cat, msg in msgs %}
+              <div class="flash {{ cat }}">{{ msg }}</div>
+            {% endfor %}
+          </div>
+        {% endif %}
+      {% endwith %}
+      {% block content %}{% endblock %}
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <span>© {{ settings.site_title if settings else 'My Blog' }}</span>
+    </div>
+  </footer>
+</body>
+</html>

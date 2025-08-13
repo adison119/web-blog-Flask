@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>{{ 'สร้างโพสต์' if mode=='create' else 'แก้ไขโพสต์' }}</h1>
+<form method="post" class="form" enctype="multipart/form-data">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+  <label>หัวข้อ</label>
+  <input type="text" name="title" value="{{ post.title if post else '' }}" required>
+  <label>เนื้อหา</label>
+  <div class="toolbar">
+    <button type="button" class="btn secondary" id="btnInsertImage">แทรกรูปในเนื้อหา</button>
+    <input type="file" id="inlineImageFile" accept="image/*" style="display:none">
+  </div>
+  <textarea name="content" rows="12" required>{{ post.content if post else '' }}</textarea>
+  <label>รูปภาพหน้าปก (ไม่บังคับ)</label>
+  <input type="file" name="image" accept="image/*">
+  {% if post and post.image_filename %}<small>รูปเดิม: <code>{{ post.image_filename }}</code></small>{% endif %}
+  <button type="submit" class="btn">{{ 'บันทึก' if mode=='edit' else 'สร้าง' }}</button>
+</form>
+
+<script>
+(function(){
+  const btn = document.getElementById('btnInsertImage');
+  const fileInput = document.getElementById('inlineImageFile');
+  const textarea = document.querySelector('textarea[name="content"]');
+  const csrf = document.querySelector('input[name="csrf_token"]').value;
+
+  function insertAtCursor(text){
+    const start = textarea.selectionStart || 0;
+    const end = textarea.selectionEnd || 0;
+    const before = textarea.value.substring(0,start);
+    const after = textarea.value.substring(end);
+    textarea.value = before + text + after;
+    const pos = start + text.length;
+    textarea.focus();
+    textarea.setSelectionRange(pos,pos);
+  }
+
+  btn.addEventListener('click', ()=> fileInput.click());
+  fileInput.addEventListener('change', async ()=>{
+    const f = fileInput.files[0];
+    if(!f) return;
+    const fd = new FormData();
+    fd.append('image', f);
+    fd.append('csrf_token', csrf);
+    try{
+      const resp = await fetch('{{ url_for("main.upload_image") }}', { method:'POST', body: fd, credentials:'same-origin' });
+      if(!resp.ok) throw new Error('upload failed');
+      const data = await resp.json();
+      const md = '\n![image](' + data.url + ')\n';
+      insertAtCursor(md);
+    }catch(e){
+      alert('อัปโหลดรูปไม่สำเร็จ');
+    }finally{
+      fileInput.value = '';
+    }
+  });
+})();
+</script>
+{% endblock %}

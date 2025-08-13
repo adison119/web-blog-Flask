@@ -1,0 +1,67 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+
+# Environments
+.env
+.env.*
+*.env
+venv/
+.venv/
+env/
+ENV/
+
+# Build / dist
+build/
+dist/
+*.egg-info/
+.eggs/
+.wheels/
+
+# Databases / instance
+instance/
+dev.db
+*.sqlite*
+*.db
+
+# Logs
+*.log
+logs/
+
+# Coverage / testing
+htmlcov/
+.tox/
+.nox/
+.coverage*
+.pytest_cache/
+
+# IDE / Editor
+.vscode/
+.idea/
+*.iml
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Node (if any)
+node_modules/
+
+# Uploads (keep folder)
+app/static/uploads/*
+!app/static/uploads/.gitkeep
+
+# SSL / Keys
+*.pem
+*.key
+*.crt
+*.p12
+*.cer
+
+# Misc
+.python-version
